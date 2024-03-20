@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    container_name: app
+    volumes:
+    - .:/app
+    depends_on:
+      - mysql
+    networks:
+      - budi
+
+
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: 'budi'
+      MYSQL_USER: 'budi'
+      MYSQL_PASSWORD: 'budi'
+      MYSQL_ROOT_PASSWORD: 'budi'
+    container_name: mysql
+    volumes:
+    - ./dbdata:/var/lib/mysql
+    networks:
+      - budi
+    
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+     - PMA_ARBITRARY=1
+     - PMA_HOST=mysql
+    ports:
+      - '8080:80'
+    networks:
+      - budi
+
+
+networks:
+  budi:
+    driver: bridge
